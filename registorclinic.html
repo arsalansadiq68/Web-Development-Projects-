@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Register - Family Doctor Clinic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600|Nunito:600,700,800,900" rel="stylesheet" />
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    body {
+      background-color: #ffe6e6;
+      font-family: 'Open Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .clinic-header {
+      text-align: center;
+      padding: 30px 20px 10px;
+      background-color: #c20000;
+      color: white;
+    }
+
+    .clinic-header h1 {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .clinic-header h4 {
+      font-weight: 300;
+    }
+
+    .register-container {
+      max-width: 400px;
+      background: white;
+      padding: 30px;
+      margin: 40px auto;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.15);
+    }
+
+    .register-container h3 {
+      color: #c20000;
+      text-align: center;
+      font-family: 'Nunito', sans-serif;
+      margin-bottom: 25px;
+    }
+
+    .btn-red {
+      background-color: #c20000;
+      color: white;
+      font-weight: bold;
+      border: none;
+    }
+
+    .btn-red:hover {
+      background-color: #a30000;
+    }
+
+    .form-control {
+      border-radius: 8px;
+    }
+
+    .clinic-image {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .clinic-image img {
+      width: 90px;
+      opacity: 0.8;
+    }
+
+    a {
+      color: #c20000;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="clinic-header">
+    <h1>Family Doctor Clinic</h1>
+    <h4>Dr. Arsalan Sadiq</h4>
+  </div>
+
+  <div class="register-container">
+    <h3>Register New Account</h3>
+
+    <div class="mb-3">
+      <input type="text" id="regUser" class="form-control" placeholder="Username">
+    </div>
+
+    <div class="mb-3">
+      <input type="password" id="regPass" class="form-control" placeholder="Password">
+    </div>
+
+    <button onclick="register()" class="btn btn-red w-100">Register</button>
+
+    <p class="text-center mt-3">
+      Already have an account? <a href="index.html">Login here</a>
+    </p>
+
+   
+  </div>
+
+  <script>
+    function register() {
+      const user = document.getElementById('regUser').value;
+      const pass = document.getElementById('regPass').value;
+
+      if (!user || !pass) {
+        alert('Please enter both username and password.');
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const exists = users.find(u => u.username === user);
+
+      if (exists) {
+        alert('Username already exists!');
+        return;
+      }
+
+      users.push({ username: user, password: pass });
+      localStorage.setItem('users', JSON.stringify(users));
+      alert('Registration successful!');
+      window.location.href = 'index.html';
+    }
+  </script>
+
+</body>
+</html>
+

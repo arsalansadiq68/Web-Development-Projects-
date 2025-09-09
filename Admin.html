@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #d32f2f, #b71c1c);
+      color: white;
+      text-align: center;
+      padding: 50px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 40px;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      background-color: white;
+      color: #b71c1c;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #f8d7da;
+      color: #d32f2f;
+    }
+
+    .logout-btn {
+      background-color: #f3f3f3;
+      color: rgb(209, 37, 37);
+    }
+
+    .logout-btn:hover {
+      background-color: #f5ebeb;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Welcome, Admin</h1>
+  <p>You have successfully logged in.</p>
+
+  <div class="button-container">
+    <button onclick="location.href='Adminbookingdashboard.html'">View Booking Records</button>
+    <button onclick="location.href='Adminonlinecheckuprecord.html'">View Online Checkup Records</button>
+    <button onclick="location.href='Admincontact.html'">View Contact us Messages</button>
+    <button onclick="location.href='Adminlogindetails.html'">View Login Details</button>
+   
+  </div>
+
+
+  <button class="logout-btn" onclick="location.href='adminlogin.html'">Logout</button>
+
+</body>
+</html>

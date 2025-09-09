@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Appointment Slip - Family Doctor Clinic</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #d32f2f, #b71c1c);
+      color: #333;
+      padding: 2rem;
+      margin: 0;
+    }
+
+    .slip-container {
+      background: #fff;
+      max-width: 600px;
+      margin: auto;
+      padding: 2rem 3rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      text-align: center;
+      color: #d32f2f;
+      font-size: 2.5rem;
+      margin: 0;
+    }
+
+    h2 {
+      text-align: center;
+      color: #b71c1c;
+      font-weight: 500;
+      margin-top: 0.3rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .detail-row {
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .label {
+      font-weight: bold;
+      color: #d32f2f;
+      display: inline-block;
+      width: 160px;
+    }
+
+    #homeVisitNote {
+      color: #d32f2f;
+      font-weight: bold;
+      margin-top: 1.5rem;
+    }
+
+    h3 {
+      color: #d32f2f;
+      margin-top: 2rem;
+    }
+
+    ol {
+      padding-left: 1.2rem;
+    }
+
+    ol li {
+      margin-bottom: 0.5rem;
+    }
+
+    #downloadBtn {
+      display: block;
+      margin: 2rem auto 0;
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      font-weight: bold;
+      background-color: #d32f2f;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    #downloadBtn:hover {
+      background-color: #b71c1c;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slip-container" id="slip">
+    <h1>Family Doctor Clinic</h1>
+    <h2>Dr. Arsalan Sadiq</h2>
+
+    <div class="detail-row"><span class="label">Name:</span> <span id="slip-name">N/A</span></div>
+    <div class="detail-row"><span class="label">Email:</span> <span id="slip-email">N/A</span></div>
+    <div class="detail-row"><span class="label">Mobile:</span> <span id="slip-mobile">N/A</span></div>
+    <div class="detail-row"><span class="label">Service:</span> <span id="slip-service">N/A</span></div>
+    <div class="detail-row"><span class="label">Appointment Date:</span> <span id="slip-date">N/A</span></div>
+    <div class="detail-row"><span class="label">Appointment Time:</span> <span id="slip-time">N/A</span></div>
+    <div class="detail-row"><span class="label">Slot Number:</span> <span id="slip-slot">N/A</span></div>
+
+    <div id="homeVisitNote"></div>
+
+    <h3>⚠️ Important Notice:</h3>
+    <ol>
+      <li>Please arrive 10 minutes before your scheduled appointment time.</li>
+      <li>Remember to bring your appointment slip with you.</li>
+      <li>Carry any necessary medical documents or previous reports.</li>
+      <li>If you are unable to attend, kindly inform us at least 24 hours in advance.</li>
+    </ol>
+
+    <button id="downloadBtn">Download Slip</button>
+  </div>
+
+  <!-- jsPDF Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    function getQueryParams() {
+      const params = {};
+      window.location.search.substring(1).split("&").forEach(pair => {
+        const [key, value] = pair.split("=");
+        if (key) params[decodeURIComponent(key)] = decodeURIComponent(value || "");
+      });
+      return params;
+    }
+
+    function getLatestLocalBooking() {
+      const bookings = JSON.parse(localStorage.getItem("bookings") || "[]");
+      return bookings.length ? bookings[bookings.length - 1] : null;
+    }
+
+    function generateRandomSlot() {
+      return Math.floor(Math.random() * 100) + 1;
+    }
+
+    function populateSlip() {
+      const params = getQueryParams();
+      let booking;
+
+      if (Object.keys(params).length) {
+        booking = params;
+      } else {
+        booking = getLatestLocalBooking();
+      }
+
+      if (!booking) return;
+
+      const name = booking.firstName || "N/A";
+      const email = booking.email || "N/A";
+      const mobile = booking.mobile || "N/A";
+      const service = booking.service || "N/A";
+      const date = booking.date || "N/A";
+      const time = (booking.time || "N/A").replace(/\s*\+\s*/g, " ");
+      const slot = generateRandomSlot();
+
+      document.getElementById("slip-name").textContent = name;
+      document.getElementById("slip-email").textContent = email;
+      document.getElementById("slip-mobile").textContent = mobile;
+      document.getElementById("slip-service").textContent = service;
+      document.getElementById("slip-date").textContent = date;
+      document.getElementById("slip-time").textContent = time;
+      document.getElementById("slip-slot").textContent = slot;
+
+      const note = document.getElementById("homeVisitNote");
+      if (service.toLowerCase() === "home visits") {
+        note.textContent = `We have received your home visit request. We will contact you within 3 hours at ${mobile} and ${email}.`;
+      } else {
+        note.textContent = "";
+      }
+    }
+
+    function downloadSlip() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFontSize(20);
+      doc.setTextColor("#d32f2f");
+      doc.text("Family Doctor Clinic", 105, 20, { align: "center" });
+
+      doc.setFontSize(14);
+      doc.setTextColor("#b71c1c");
+      doc.text("Dr. Arsalan Sadiq", 105, 30, { align: "center" });
+
+      let y = 45;
+
+      const addLine = (label, value) => {
+        doc.setFontSize(12);
+        doc.setTextColor("#d32f2f");
+        doc.text(`${label}:`, 20, y);
+        doc.setTextColor("#000");
+        doc.text(value, 70, y);
+        y += 10;
+      };
+
+      addLine("Name", document.getElementById("slip-name").textContent);
+      addLine("Email", document.getElementById("slip-email").textContent);
+      addLine("Mobile", document.getElementById("slip-mobile").textContent);
+      addLine("Service", document.getElementById("slip-service").textContent);
+      addLine("Appointment Date", document.getElementById("slip-date").textContent);
+      addLine("Appointment Time", document.getElementById("slip-time").textContent);
+      addLine("Slot Number", document.getElementById("slip-slot").textContent);
+
+      if (document.getElementById("slip-service").textContent.toLowerCase() === "home visits") {
+        y += 10;
+        doc.setTextColor("#d32f2f");
+        doc.text("Note:", 20, y);
+        y += 8;
+        doc.setTextColor("#000");
+        doc.text(
+          `We have received your home visit request. We will contact you within 3 hours at ${document.getElementById("slip-mobile").textContent} and ${document.getElementById("slip-email").textContent}.`,
+          20, y,
+          { maxWidth: 170 }
+        );
+        y += 20;
+      }
+
+      doc.setTextColor("#d32f2f");
+      doc.setFontSize(14);
+      doc.text("Important Notice:", 20, y);
+      y += 10;
+
+      doc.setFontSize(12);
+      doc.setTextColor("#000");
+      const notices = [
+        "Please arrive 10 minutes before your scheduled appointment time.",
+        "Remember to bring your appointment slip with you.",
+        "Carry any necessary medical documents or previous reports.",
+        "If you are unable to attend, kindly inform us at least 24 hours in advance."
+      ];
+      notices.forEach(notice => {
+        doc.text(`• ${notice}`, 25, y, { maxWidth: 170 });
+        y += 8;
+      });
+
+      doc.save("appointment-slip.pdf");
+    }
+
+    window.onload = () => {
+      populateSlip();
+      document.getElementById("downloadBtn").addEventListener("click", downloadSlip);
+    };
+  </script>
+
+</body>
+</html>

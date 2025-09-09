@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Family Doctor Clinic - Medical Assistant</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #fff;
+      color: #333;
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      border: 5px solid #c62828;
+      border-radius: 8px;
+    }
+
+    header {
+      background-color: #c62828;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      border-radius: 6px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.5em;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #c62828;
+      color: white;
+      padding: 10px 20px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #a82323;
+    }
+
+    .symptom-list label {
+      font-weight: normal;
+      margin-top: 5px;
+      display: block;
+    }
+
+    #results {
+      background-color: #fff3f3;
+      padding: 15px;
+      border: 1px solid #c62828;
+      margin-top: 30px;
+      border-radius: 6px;
+    }
+
+    strong {
+      color: #c62828;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Family Doctor Clinic</h1>
+    <p>Your Trusted Online Medical Assistant</p>
+  </header>
+
+  <form id="patientForm">
+    <label for="name">Patient Name:</label>
+    <input type="text" id="name" required />
+
+    <label for="age">Patient Age:</label>
+    <input type="number" id="age" required min="1" max="120" />
+
+    <label>Select Symptoms or Conditions:</label>
+    <div class="symptom-list">
+      <label><input type="checkbox" value="headache" /> Headache</label>
+      <label><input type="checkbox" value="knee_pain" /> Knee Pain</label>
+      <label><input type="checkbox" value="shoulder_pain" /> Shoulder Pain</label>
+      <label><input type="checkbox" value="stomach_ache" /> Stomach Ache</label>
+      <label><input type="checkbox" value="cold" /> Cold</label>
+      <label><input type="checkbox" value="flu" /> Flu</label>
+      <label><input type="checkbox" value="cough" /> Cough</label>
+      <label><input type="checkbox" value="heart_disease" /> Heart Disease</label>
+      <label><input type="checkbox" value="cancer" /> Cancer</label>
+      <label><input type="checkbox" value="accident" /> Accident</label>
+      <label><input type="checkbox" value="stroke" /> Stroke</label>
+      <label><input type="checkbox" value="diabetes" /> Diabetes</label>
+    </div>
+
+    <button type="submit">Check and Suggest</button>
+  </form>
+
+  <div id="results"></div>
+
+  <footer>
+    &copy; 2025 Family Clinic. All rights reserved.
+  </footer>
+
+  <script>
+    const medicationGuide = {
+      headache: {
+        adult: { medicine: "Panadol (Paracetamol 500mg)", instructions: "Take 1 tablet with water after meals", timing: "Every 6 hours, max 3 times/day" },
+        child: { medicine: "Calpol Syrup", instructions: "5 ml after meals", timing: "Every 6 hours (Max 3 doses/day)" }
+      },
+      knee_pain: {
+        adult: { medicine: "Brufen (Ibuprofen 400mg)", instructions: "Take 1 tablet with food", timing: "Twice a day" },
+        child: { medicine: "Brufen Syrup", instructions: "5 ml after meals", timing: "Twice daily" }
+      },
+      shoulder_pain: {
+        adult: { medicine: "Voltral Emulgel", instructions: "Apply on affected area", timing: "Twice daily" },
+        child: { medicine: "Warm compress", instructions: "Avoid strong meds without doctor’s advice", timing: "As needed" }
+      },
+      stomach_ache: {
+        adult: { medicine: "Losec (Omeprazole 20mg)", instructions: "Take 1 capsule before meals", timing: "Once daily" },
+        child: { medicine: "Zantac Syrup", instructions: "5 ml before meals", timing: "1–2 times/day" }
+      },
+      cold: {
+        adult: { medicine: "Zyrtec 10mg", instructions: "Take 1 tablet at bedtime", timing: "Once a day" },
+        child: { medicine: "Cetrizine Syrup", instructions: "5 ml at bedtime", timing: "Once a day" }
+      },
+      flu: {
+        adult: { medicine: "Tamiflu 75mg", instructions: "Take 1 capsule after meals", timing: "Twice daily for 5 days" },
+        child: { medicine: "Tamiflu Syrup (if prescribed)", instructions: "As advised by doctor", timing: "Twice daily for 5 days" }
+      },
+      cough: {
+        adult: { medicine: "Brozil Syrup", instructions: "10 ml (2 tsp)", timing: "Every 6–8 hours" },
+        child: { medicine: "Brozil Syrup", instructions: "5 ml (1 tsp)", timing: "Every 6–8 hours" }
+      },
+      heart_disease: {
+        adult: { medicine: "Aspirin 75mg + Atorvastatin", instructions: "Take Aspirin after breakfast, Statin at night", timing: "Once daily" },
+        child: { medicine: "Consult pediatric cardiologist", instructions: "Special diagnosis needed", timing: "As directed" }
+      },
+      cancer: null,
+      accident: {
+        adult: { medicine: "Panadol + First aid (bandage, antiseptic)", instructions: "Stop bleeding, clean wounds, rest", timing: "Immediate; then consult doctor" },
+        child: { medicine: "Calpol Syrup + basic first aid", instructions: "Clean wound, apply antiseptic, rest", timing: "As soon as possible" }
+      },
+      stroke: null,
+      diabetes: {
+        adult: { medicine: "Metformin 500mg or Insulin", instructions: "Take with meals. Monitor sugar.", timing: "1–2 times/day" },
+        child: { medicine: "Insulin (prescribed)", instructions: "Monitor sugar closely", timing: "As advised by doctor" }
+      }
+    };
+
+    document.getElementById('patientForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const age = parseInt(document.getElementById('age').value);
+      const isChild = age < 10;
+      const selectedSymptoms = Array.from(document.querySelectorAll('input[type=checkbox]:checked')).map(cb => cb.value);
+
+      if (!name || isNaN(age) || selectedSymptoms.length === 0) {
+        document.getElementById('results').innerHTML = `<p>Please enter all fields and select at least one symptom.</p>`;
+        return;
+      }
+
+      //  Save name and age to localStorage for Admin Checkup Records
+      const checkups = JSON.parse(localStorage.getItem("checkups")) || [];
+      checkups.push({ name, age });
+      localStorage.setItem("checkups", JSON.stringify(checkups));
+
+      let resultHTML = `<h3>Medication Plan for ${name} (Age: ${age})</h3>`;
+
+      selectedSymptoms.forEach(symptom => {
+        const guide = medicationGuide[symptom];
+        const med = guide ? guide[isChild ? 'child' : 'adult'] : null;
+
+        if (!guide || !med || !med.medicine) {
+          resultHTML += `
+            <div>
+              <strong>Condition:</strong> ${symptom.replace("_", " ").toUpperCase()}<br/>
+              <strong>⚠️ Notice:</strong> I am Sorry to tell you , You may have limited time to act.<br/>
+              Please contact <strong>Dr. Arsalan Sadiq</strong> immediately.<br/><br/>
+            </div>
+          `;
+        } else {
+          resultHTML += `
+            <div>
+              <strong>Symptom:</strong> ${symptom.replace("_", " ").toUpperCase()}<br/>
+              <strong>Medicine:</strong> ${med.medicine}<br/>
+              <strong>How to take:</strong> ${med.instructions}<br/>
+              <strong>Timing:</strong> ${med.timing}<br/><br/>
+            </div>
+          `;
+        }
+      });
+
+      resultHTML += `<p><strong>Note:</strong> Act on this Advice if you didn't get well , consult physical treatment to <strong>Dr. Arsalan Sadiq</strong>.</p>`;
+      document.getElementById('results').innerHTML = resultHTML;
+    });
+  </script>
+
+</body>
+</html>

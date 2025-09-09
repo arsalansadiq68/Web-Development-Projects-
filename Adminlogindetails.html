@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard - Family Doctor Clinic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,600|Nunito:600,800" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: #ffe6e6;
+      margin: 0;
+      padding: 0;
+    }
+
+    .admin-header {
+      background-color: #c20000;
+      color: white;
+      padding: 25px 20px;
+      text-align: center;
+    }
+
+    .admin-header h1 {
+      margin: 0;
+      font-family: 'Nunito', sans-serif;
+      font-size: 32px;
+    }
+
+    .dashboard-container {
+      max-width: 900px;
+      margin: 40px auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #c20000;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #c20000;
+      color: white;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 20px;
+      color: gray;
+    }
+
+    .user-form {
+      margin-top: 30px;
+      padding: 20px;
+      background: #fff5f5;
+      border-radius: 8px;
+      border: 1px solid #f3c3c3;
+    }
+
+    .user-form input {
+      padding: 10px;
+      margin-right: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .user-form button {
+      padding: 10px 15px;
+      background-color: #c20000;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .user-form button:hover {
+      background-color: #a00000;
+    }
+
+    .btn-delete {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn-delete:hover {
+      background-color: #b52a35;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="admin-header">
+    <h1>Family Doctor Clinic</h1>
+    <p>Dr. Arsalan Sadiq - Admin Dashboard</p>
+  </div>
+
+  <div class="dashboard-container">
+    <h2>Login Records</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Password</th>
+          <th>Login Time</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="loginTableBody">
+        <tr><td colspan="4" class="no-data">Loading...</td></tr>
+      </tbody>
+    </table>
+
+    <div class="user-form">
+      <h3>Add New User</h3>
+      <input type="text" id="newUsername" placeholder="Username">
+      <input type="text" id="newPassword" placeholder="Password">
+      <button onclick="addUser()">Add User</button>
+    </div>
+  </div>
+
+  <script>
+    function loadTable() {
+      const records = JSON.parse(localStorage.getItem('loginRecords') || '[]');
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const tableBody = document.getElementById('loginTableBody');
+
+      if (records.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="4" class="no-data">No login records found.</td></tr>';
+        return;
+      }
+
+      tableBody.innerHTML = '';
+      records.forEach((record, index) => {
+        const userEntry = users.find(u => u.username === record.username);
+        const password = userEntry ? userEntry.password : 'N/A';
+        const row = `
+          <tr>
+            <td>${record.username}</td>
+            <td>${password}</td>
+            <td>${record.loginTime}</td>
+            <td><button class="btn-delete" onclick="deleteUser('${record.username}')">Delete</button></td>
+          </tr>
+        `;
+        tableBody.innerHTML += row;
+      });
+    }
+
+    function addUser() {
+      const username = document.getElementById('newUsername').value.trim();
+      const password = document.getElementById('newPassword').value.trim();
+
+      if (!username || !password) {
+        alert('Please enter both username and password.');
+        return;
+      }
+
+      let users = JSON.parse(localStorage.getItem('users') || '[]');
+      const exists = users.some(u => u.username === username);
+      if (exists) {
+        alert('User already exists.');
+        return;
+      }
+
+      users.push({ username, password });
+      localStorage.setItem('users', JSON.stringify(users));
+      alert('User added successfully.');
+      document.getElementById('newUsername').value = '';
+      document.getElementById('newPassword').value = '';
+      loadTable();
+    }
+
+    function deleteUser(usernameToDelete) {
+      if (!confirm(`Delete user "${usernameToDelete}"?`)) return;
+
+      let users = JSON.parse(localStorage.getItem('users') || '[]');
+      let records = JSON.parse(localStorage.getItem('loginRecords') || '[]');
+
+      users = users.filter(user => user.username !== usernameToDelete);
+      records = records.filter(record => record.username !== usernameToDelete);
+
+      localStorage.setItem('users', JSON.stringify(users));
+      localStorage.setItem('loginRecords', JSON.stringify(records));
+      loadTable();
+    }
+
+    loadTable();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Login - Family Doctor Clinic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #ffe6e6;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .login-container {
+      max-width: 420px;
+      margin: 80px auto;
+      padding: 35px 30px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    .clinic-heading {
+      text-align: center;
+      color: #c20000;
+      font-weight: 800;
+      font-size: 26px;
+      margin-bottom: 8px;
+    }
+
+    .doctor-name {
+      text-align: center;
+      color: #555;
+      margin-bottom: 30px;
+      font-size: 18px;
+    }
+
+    .btn-primary {
+      background-color: #c20000;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #a00000;
+    }
+
+    .form-check {
+      margin-top: -10px;
+      margin-bottom: 15px;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+     <div class="clinic-heading">Admin Portal</div>
+    <div class="clinic-heading">Family Doctor Clinic</div>
+    <div class="doctor-name">Dr. Arsalan Sadiq</div>
+
+    <form id="loginForm">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" class="form-control" id="username" required placeholder="Enter username">
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" required placeholder="Enter password">
+      </div>
+
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="showPassword">
+        <label class="form-check-label" for="showPassword">Show Password</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Login</button>
+      <div class="error" id="errorMsg"></div>
+    </form>
+  </div>
+
+  <script>
+    const validUsers = ["Arsalan", "Azan", "Raif"];
+    const validPassword = "123456";
+
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (validUsers.includes(username) && password === validPassword) {
+        window.location.href = "Admin.html";
+      } else {
+        document.getElementById("errorMsg").textContent = "Invalid username or password.";
+      }
+    });
+
+    document.getElementById("showPassword").addEventListener("change", function () {
+      const passwordInput = document.getElementById("password");
+      passwordInput.type = this.checked ? "text" : "password";
+    });
+  </script>
+
+</body>
+</html>
